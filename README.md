@@ -30,7 +30,7 @@ optional arguments:
                         .gitignore and .git 
 ```
 
-# Contribiution
-All new feature implementations or performance improvments are very much welcome!
+# Contribution
+All new feature implementations or performance improvements are very much welcome!
 Simply fork this repo and open a pull request or create an issue.
                         
