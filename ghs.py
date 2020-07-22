@@ -32,33 +32,36 @@ except Exception:
 
 #read from local file
 sensitive_words = [ ]
-sensitive_words_file = os.path.join(Path.home(), ".config/github-sanatise/sensitive_words.txt")
+def sensitive_words_array_setup():
+	"""
+	reads the local config file, creates prompt, if never setup
+	"""
+	sensitive_words_file = os.path.join(Path.home(), ".config/github-sanatise/sensitive_words.txt")
+	#check if folder exits, else create them
+	if not os.path.exists(os.path.dirname(sensitive_words_file)):
+		try:
+			os.makedirs(os.path.dirname(sensitive_words_file))
+		except OSError as exc:  # Guard against race condition
+			if exc.errno != errno.EEXIST:
+				raise
 
-#check if folder exits, else create them
-if not os.path.exists(os.path.dirname(sensitive_words_file)):
-    try:
-        os.makedirs(os.path.dirname(sensitive_words_file))
-    except OSError as exc:  # Guard against race condition
-        if exc.errno != errno.EEXIST:
-            raise
+	#try to open sensitve files file, if not there, create it
+	try:
+		with open(sensitive_words_file, "r", encoding="utf-8") as file:
+			for line in file.readlines():
+				sensitive_words.append(line.rstrip())
 
-#try to open sensitve files file, if not there, create it
-try:
-	with open(sensitive_words_file, "r", encoding="utf-8") as file:
-		for line in file.readlines():
-			sensitive_words.append(line.rstrip())
-
-except FileNotFoundError:
-	print("Please setup your sensitive words list\nEnter each word (sentence) on a new line. Type 'END' to continue with program\n")
-	word = input("+| ")
-	while word != "END":
-		with open(sensitive_words_file, "a+", encoding="utf-8") as file:
-			file.write(f"{word}\n")
-
-		sensitive_words.append(word)
+	except FileNotFoundError:
+		print("Please setup your sensitive words list\nEnter each word (sentence) on a new line. Type 'END' to continue with program\n")
 		word = input("+| ")
-	
-	print(f"Setup complete. You can edit the wordlist here:\n{sensitive_words_file}\n")
+		while word != "END":
+			with open(sensitive_words_file, "a+", encoding="utf-8") as file:
+				file.write(f"{word}\n")
+
+			sensitive_words.append(word)
+			word = input("+| ")
+		
+		print(f"Setup complete. You can edit the wordlist here:\n{sensitive_words_file}\n")
 
 
 COMMON_FILE_TYPES = ["c", "h", "cpp", "hpp", "hh", "cs", "csx", "java", "class", "m", "py",
@@ -283,5 +286,6 @@ if __name__ == '__main__':
 	parser.add_argument("-a", "--all", action="store_true", help="scan all files regardless of their file extension")
 	parser.add_argument("--scan-git", action="store_true", help="scan the entire folder structure regardless of any .gitignore and .git")
 	args = parser.parse_args()
+	sensitive_words_array_setup()
 	main(args.folderPath, verbose=args.verbose_output, sort=args.sort, scan_git=args.scan_git, all_file_types=args.all)
 	#profile() # uncomment to profile script

@@ -77,6 +77,7 @@ class TestBasicFuncitons(unittest.TestCase):
 
     def test_email_regex(self):
         self.assertTrue(ghs._find_e_mail("hallo@gmail.com"))
+        self.assertTrue(ghs._find_e_mail("real@mail.to"))
         self.assertFalse(ghs._find_e_mail("not@asd"))
         self.assertFalse(ghs._find_e_mail("www.jump.com"))
 
