@@ -8,7 +8,7 @@ with this little script you are able to filter your code for personal informatio
  * Colored Output
 
 # Usage
-run the script with Python 3.5+ or using ./ghs.py on linux
+run the script with Python 3.6+ or using ./ghs.py on linux
 
 ```
 usage: ghs.py [-h] [-d] [-v] [-s] [-a] [--scan-git]
