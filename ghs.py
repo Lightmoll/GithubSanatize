@@ -3,6 +3,7 @@
 """"
     Written on: 2020-02-10 to 2020-05-15
     Written by: Lightmoll
+    License: MIT License
     
     This script runs through an git folder before publishing
 	to catch and report potentially sensitve information
