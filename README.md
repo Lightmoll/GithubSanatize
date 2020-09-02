@@ -1,6 +1,6 @@
 # GithubSanatize
-![Unittest 3.6 - 3.8](https://github.com/Lightmoll/GithubSanatize/workflows/Unittest%203.6%20-%203.8/badge.svg)
 with this little script you are able to filter your code for personal information and private data before every commit
+![Unittest 3.6 - 3.8](https://github.com/Lightmoll/GithubSanatize/workflows/Unittest%203.6%20-%203.8/badge.svg)
 
 # Features
  * Automatic .git and .gitignore detection
@@ -28,10 +28,9 @@ optional arguments:
   -s, --sort            sort occurrences by importance
   -a, --all             scan all files regardless of their file extension
   --scan-git            scan the entire folder structure regardless of any
-                        .gitignore and .git 
+                        .gitignore and .git
 ```
 
 # Contribution
 All new feature implementations or performance improvements are very much welcome!
 Simply fork this repo and open a pull request or create an issue.
-                        
