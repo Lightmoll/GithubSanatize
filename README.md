@@ -1,4 +1,5 @@
 # GithubSanatize
+![Unittest 3.6 - 3.8](https://github.com/Lightmoll/GithubSanatize/workflows/Unittest%203.6%20-%203.8/badge.svg)
 with this little script you are able to filter your code for personal information and private data before every commit
 
 # Features
