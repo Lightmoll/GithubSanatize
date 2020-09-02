@@ -1,0 +1,7 @@
+.directory
+
+.vscode/*
+profiling/*
+test_data/*
+
+__pycache__/*

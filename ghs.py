@@ -4,7 +4,7 @@
     Written on: 2020-02-10 to 2020-05-15
     Written by: Lightmoll
     License: MIT License
-    
+
     This script runs through an git folder before publishing
 	to catch and report potentially sensitve information
 
@@ -20,6 +20,7 @@ from pathlib import Path
 import argparse
 import errno
 import glob  # .gitignore uses glob notation
+import sys
 import os
 import re
 
@@ -29,6 +30,21 @@ try:
 except Exception:
 	print("Install string-color with 'pip install string-color' for a colored output")
 	NO_COLORS = True
+
+def progressBar(name, value, endvalue, bar_length = 50, width = 17):
+        percent = value / endvalue
+        arrow = '█' * round(percent*bar_length)
+        spaces = ' ' * (bar_length - len(arrow))
+        try:
+            sys.stdout.write("\r{0: <{1}} : |{2}| {3}%".format(\
+                            name, width, arrow + spaces, round(percent*100)))
+        except UnicodeEncodeError:
+            arrow = '#' * round(percent*bar_length)
+            sys.stdout.write("\r{0: <{1}} : |{2}| {3}%".format(\
+                            name, width, arrow + spaces, round(percent*100)))
+        sys.stdout.flush()
+        if value == endvalue:
+            sys.stdout.write('\n')
 
 #read from local file
 sensitive_words = [ ]
@@ -57,10 +73,9 @@ def sensitive_words_array_setup():
 		while word != "END":
 			with open(sensitive_words_file, "a+", encoding="utf-8") as file:
 				file.write(f"{word}\n")
+				sensitive_words.append(word)
+				word = input("+| ")
 
-			sensitive_words.append(word)
-			word = input("+| ")
-		
 		print(f"Setup complete. You can edit the wordlist here:\n{sensitive_words_file}\n")
 
 
@@ -157,14 +172,14 @@ def sanatize_file(file_path, verbose):
 	return error_list
 
 #TODO Very ugly, needs refactoring if possible
-def list_valid_files_in_folder(folder_path, scan_git=False, all_file_types=False):
+def list_valid_files_in_folder(folder_path, scan_git=False, all_file_types=False, recursive=False):
 	files = []
 
 	#catch if input is multiple files/paths
 	if type(folder_path) is list:
 		for path in folder_path:
 			files.extend(
-				list_valid_files_in_folder(path, scan_git=scan_git, all_file_types=all_file_types)
+				list_valid_files_in_folder(path, scan_git=scan_git, all_file_types=all_file_types, recursive=True)
 				)
 		return files
 
@@ -257,14 +272,19 @@ def main(cwd, **flags):
 	def sort_by_err_lvl(elem):
 		return elem["error_level"]
 
+	#TODO change to real progress bar, this just mockup to let user know whats going on
+	progressBar("gather files", 0, 1)
 	files_to_scan = list_valid_files_in_folder(cwd, scan_git=flags["scan_git"], all_file_types=flags["all_file_types"])
+	progressBar("gather files", 1, 1)
 	error_list = []
 	if not flags["verbose"]:
-		pass #put here line below	
+		pass #put here line below
 	gen_regex_list() #is called here, so it is only called once
 
-	for file in files_to_scan:
+	for index, file in enumerate(files_to_scan):
+		progressBar("scanning files", index, len(files_to_scan))
 		error_list.extend(sanatize_file(file, flags["verbose"]))
+
 
 	if flags["sort"]:
 		error_list.sort(key=sort_by_err_lvl)
